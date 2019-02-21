@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [Margarita Kozyreva](https://up.htmlacademy.ru/ecmascript/8/user/460679).
-* Наставник: `Неизвестно`.
+* Наставник:  [Алексей Балесный](https://up.htmlacademy.ru/ecmascript/8/user/221665).
 
 ---
 
