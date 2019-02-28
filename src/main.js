@@ -7,7 +7,7 @@ const events = [
   {
     title: `Taxi to Airport`,
     icon: `🚕`,
-    time: `10:30-11:30`,
+    time: `10:00 — 11:00`,
     price: `&euro;&nbsp;20`,
     offers: [
       {
@@ -23,7 +23,7 @@ const events = [
   {
     title: `Flight to Geneva`,
     icon: `✈️`,
-    time: `10:30-11:30`,
+    time: `10:00 — 11:00`,
     price: `&euro;&nbsp;20`,
     offers: [
       {
@@ -39,7 +39,7 @@ const events = [
   {
     title: `Drive to Chamonix`,
     icon: `🚗`,
-    time: `10:30-11:30`,
+    time: `10:00 — 11:00`,
     price: `&euro;&nbsp;20`,
     offers: [
       {
@@ -55,7 +55,7 @@ const events = [
   {
     title: `Check into a hotel`,
     icon: `🏨`,
-    time: `10:30-11:30`,
+    time: `10:00 — 11:00`,
     price: `&euro;&nbsp;20`,
     offers: [
       {
@@ -67,25 +67,30 @@ const events = [
 ];
 
 const getDuration = function (time) {
-  const generalTime = time.split(`-`);
-  const getHoursTo = generalTime[0].split(`:`)[0];
-  const getMinutesTo = generalTime[0].split(`:`)[1];
+  const HOUR = 60;
+  const generalTime = time.split(`—`);
+  const getHoursTo = Number(generalTime[0].split(`:`)[0]);
+  const getMinutesTo = Number(generalTime[0].split(`:`)[1]);
 
-  const getHoursFrom = generalTime[1].split(`:`)[0];
-  const getMinutesFrom = generalTime[1].split(`:`)[1];
+  const getHoursFrom = Number(generalTime[1].split(`:`)[0]);
+  const getMinutesFrom = Number(generalTime[1].split(`:`)[1]);
 
-  let diff = (getHoursTo * 60 + getMinutesTo) - (getHoursFrom * 60 + getMinutesFrom);
+  let diff = (getHoursTo * HOUR + getMinutesTo) - (getHoursFrom * HOUR + getMinutesFrom);
   diff = Math.abs(diff);
-  let diffH = Math.floor(diff / 60);
-  let diffM = diff - diffH * 60;
-  return `${diffH + diffM}`;
+  let diffH = Math.floor(diff / HOUR);
+  let diffM = diff - diffH * HOUR;
+  return `${diffH}H ${diffM}M`;
 };
 
-const getOffers = (offer, price) => {
-  return `${offer} +${price}`;
+const getOffers = (...offers) => {
+  let temp = ``;
+  for (let elems of offers) {
+    temp = (`<ul class="trip-point__offers">${elems.map((it) => `<li><button class="trip-point__offer">${it.offer} ${it.price}</button></li>`).join(``)}</ul>`);
+  }
+  return temp;
 };
 
 const templateEvent = events.map((event) => {
-  return renderEvent(`${event.icon}`, `${event.title}`, `${event.time}`, getDuration(event.time), `${event.price}`, getOffers(event.offers[0].offer, event.offers[0].price));
+  return renderEvent(`${event.icon}`, `${event.title}`, `${event.time}`, getDuration(event.time), `${event.price}`, getOffers(event.offers));
 }).join(``);
 tripItems.insertAdjacentHTML(`beforeend`, templateEvent);
