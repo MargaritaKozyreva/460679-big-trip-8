@@ -21,50 +21,50 @@ const events = [{
   }
   ]
 },
+// {
+//   title: `Flight to Geneva`,
+//   icon: `✈️`,
+//   time: `10:00 — 11:00`,
+//   price: `&euro;&nbsp;20`,
+//   offers: [
 //     {
-//       title: `Flight to Geneva`,
-//       icon: `✈️`,
-//       time: `10:00 — 11:00`,
-//       price: `&euro;&nbsp;20`,
-//       offers: [
-//         {
-//           offer: `Upgrade to business`,
-//           price: `&euro;&nbsp;20`
-//         },
-//         {
-//           offer: `Select meal`,
-//           price: `&euro;&nbsp;20`
-//         }
-//       ]
+//       offer: `Upgrade to business`,
+//       price: `&euro;&nbsp;20`
 //     },
 //     {
-//       title: `Drive to Chamonix`,
-//       icon: `🚗`,
-//       time: `10:00 — 11:00`,
-//       price: `&euro;&nbsp;20`,
-//       offers: [
-//         {
-//           offer: `Rent a car`,
-//           price: `&euro;&nbsp;200`
-//         },
-//         {
-//           offer: `Upgrade to business`,
-//           price: `&euro;&nbsp;20`
-//         }
-//       ]
+//       offer: `Select meal`,
+//       price: `&euro;&nbsp;20`
+//     }
+//   ]
+// },
+// {
+//   title: `Drive to Chamonix`,
+//   icon: `🚗`,
+//   time: `10:00 — 11:00`,
+//   price: `&euro;&nbsp;20`,
+//   offers: [
+//     {
+//       offer: `Rent a car`,
+//       price: `&euro;&nbsp;200`
 //     },
 //     {
-//       title: `Check into a hotel`,
-//       icon: `🏨`,
-//       time: `10:00 — 11:00`,
-//       price: `&euro;&nbsp;20`,
-//       offers: [
-//         {
-//           offer: `Add breakfast`,
-//           price: `&euro;&nbsp;20`
-//         },
-//       ]
+//       offer: `Upgrade to business`,
+//       price: `&euro;&nbsp;20`
+//     }
+//   ]
+// },
+// {
+//   title: `Check into a hotel`,
+//   icon: `🏨`,
+//   time: `10:00 — 11:00`,
+//   price: `&euro;&nbsp;20`,
+//   offers: [
+//     {
+//       offer: `Add breakfast`,
+//       price: `&euro;&nbsp;20`
 //     },
+//   ]
+// },
 ];
 
 const filters = [
@@ -115,7 +115,9 @@ const getOffers = (...offers) => {
 const templateEvent = events.map((event) => {
   return renderEvent(`${event.icon}`, `${event.title}`, `${event.time}`, getDuration(event.time), `${event.price}`, getOffers(event.offers));
 }).join(``);
-//tripItems.insertAdjacentHTML(`beforeend`, templateEvent);
+
+// tripItems.insertAdjacentHTML(`beforeend`, templateEvent);
+
 [...eventArray].map(() => tripItems.insertAdjacentHTML(`beforeend`, templateEvent));
 
 const templateFilter = filters.map((filter) => {
