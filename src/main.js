@@ -1,12 +1,11 @@
 import renderEvent from './make-event.js';
 import renderFilter from './make-filter.js';
+import {eventMocks} from './make-description.js';
 import * as constant from './constants.js';
 import moment from 'moment';
 
 const tripItems = document.querySelector(`.trip-day__items`);
 const tripFilter = document.querySelector(`.trip-filter`);
-
-const eventMocks = constant.descriptions;
 
 const getDuration = function (startTime, endTime) {
   const start = moment(startTime, `HH:mm`);
@@ -15,12 +14,12 @@ const getDuration = function (startTime, endTime) {
   return diff;
 };
 
-const getOffers = (offers) => {
-  return `${offers.map((elem) => (`<li><button class="trip-point__offer">${elem.offer} ${elem.price}</button></li>`)).join(``)}`;
-};
+// const getOffers = (offers) => {
+//   return `${offers.map((elem) => (`<li><button class="trip-point__offer">${elem.offer} ${elem.price}</button></li>`)).join(``)}`;
+// };
 
 const templateEvent = eventMocks.map((eventData) => {
-  return renderEvent(`${eventData.icon}`, `${eventData.title}`, `${eventData.timeStart} — ${eventData.timeEnd}`, getDuration(eventData.timeStart, eventData.timeEnd), `${eventData.price}`, getOffers(eventData.offers));
+  return renderEvent(`${eventData.icon}`, `${eventData.title}`, `${eventData.timeStart} — ${eventData.timeEnd}`, getDuration(eventData.timeStart, eventData.timeEnd), `${eventData.price}`, `${eventData.offers}`);
 }).join(``);
 
 const addRenderEvents = (numbers) => {
