@@ -1,27 +1,23 @@
-import {setIcon, setOffer} from './constants.js';
+import {getIcon} from './constants.js';
 
 export const cities = [{
   id: `Amsterdam`,
   title: `Taxi to Airport`,
-  icon: setIcon(`Taxi`),
-  offers: setOffer(`Amsterdam`),
+  icon: getIcon(`Taxi`),
 },
 {
   id: `Geneva`,
   title: `Flight to Geneva`,
-  icon: setIcon(`Flight`),
-  offers: setOffer(`Geneva`),
+  icon: getIcon(`Flight`),
 },
 {
   id: `Chamonix`,
   title: `Drive to Chamonix`,
-  icon: setIcon(`Drive`),
-  offers: setOffer(`Chamonix`),
+  icon: getIcon(`Drive`),
 },
 {
   id: `France`,
   title: `Check into a hotel`,
-  icon: setIcon(`Check-in`),
-  offers: setOffer(`France`),
+  icon: getIcon(`Check-in`),
 },
 ];
