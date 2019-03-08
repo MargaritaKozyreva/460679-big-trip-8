@@ -1,5 +1,4 @@
 import moment from 'moment';
-import {tripItems, markup} from './main.js';
 export const EVENT_COUNT = 7;
 export const OFFERS = `Add luggage, Switch to comfort class, Add meal, Choose seats`;
 export const OFFERS_COUNT = 2;
@@ -19,21 +18,15 @@ export const getRandomParam = (type, count, split = `,`) => {
   let newArray = [];
 
   const arrayDesc = type.split(split);
-  const randomCount = getRandomCount(1, count);
-  const rand = () => Math.floor(Math.random() * arrayDesc.length);
-  newArray = [...new Array(randomCount)].map(() => arrayDesc[rand()].trim());
+  const randomCountArray = getRandomCount(1, count);
+  const randomCount = () => Math.floor(Math.random() * arrayDesc.length);
+  newArray = [...new Array(randomCountArray)].map(() => arrayDesc[randomCount()].trim());
   return newArray;
 };
 
-export const addRenderEvents = (numbers) => {
-
-  let arrayRandomEvents = [];
-  arrayRandomEvents = [...new Array(numbers)].map(() => markup[getRandomCount(0, 4)]);
-  // for (let i = 0; i < numbers; i++) {
-  //   arrayRandomEvents.push(markup[getRandomCount(0, 4)]);
-  // }
-  return tripItems.insertAdjacentHTML(`beforeend`, arrayRandomEvents.join(``));
-
+export const addRenderEvents = (numbers, template, container) => {
+  const arrayRandomEvents = [...new Array(numbers)].map(() => template[getRandomCount(0, 4)]);
+  return container.insertAdjacentHTML(`beforeend`, arrayRandomEvents.join(``));
 };
 
 export const getIcon = (name) => {

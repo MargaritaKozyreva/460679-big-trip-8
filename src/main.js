@@ -4,10 +4,10 @@ import {eventMocks} from './make-description.js';
 import * as constant from './constants.js';
 import lodash from 'lodash';
 
-export const tripItems = document.querySelector(`.trip-day__items`);
+const tripItems = document.querySelector(`.trip-day__items`);
 const tripFilter = document.querySelector(`.trip-filter`);
 
-export const markup = lodash.shuffle(eventMocks.map(renderEvent));
+const markup = lodash.shuffle(eventMocks.map(renderEvent));
 
 tripItems.insertAdjacentHTML(`beforeend`, markup.join(``));
 
@@ -20,5 +20,5 @@ tripFilter.insertAdjacentHTML(`beforeend`, templateFilter);
 tripFilter.addEventListener(`click`, () => {
   const randomCountEvents = constant.getRandomCount(1, constant.EVENT_COUNT);
   tripItems.innerHTML = ``;
-  constant.addRenderEvents(randomCountEvents);
+  constant.addRenderEvents(randomCountEvents, markup, tripItems);
 });
