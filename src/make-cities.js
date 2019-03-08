@@ -18,6 +18,6 @@ export const cities = [{
 {
   id: `France`,
   title: `Check into a hotel`,
-  icon: getIcon(`Check-in`),
+  icon: getIcon(`Checkin`),
 },
 ];

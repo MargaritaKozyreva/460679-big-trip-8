@@ -11,7 +11,7 @@ export default (eventObj) => {
   </p>
   <p class="trip-point__price">${eventObj.price}</p>
   <ul class="trip-point__offers">
-  ${eventObj.offers}
+  <li><button class="trip-point__offer">${eventObj.offers}</button></li>
   </ul>
 </article>
   `;

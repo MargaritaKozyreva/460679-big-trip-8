@@ -1,4 +1,6 @@
-export const EVENT_COUNT = 4;
+import moment from 'moment';
+import {tripItems, markup} from './main.js';
+export const EVENT_COUNT = 7;
 export const OFFERS = `Add luggage, Switch to comfort class, Add meal, Choose seats`;
 export const OFFERS_COUNT = 2;
 export const DESCRIPTION = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
@@ -8,90 +10,55 @@ export const TIME_END = `9:00, 10:00, 11:00, 12:00, 13:00, 14:00, 15:00, 16:00, 
 export const TIME_COUNT = 1;
 export const PRICE = `20, 30, 40, 50, 100, 150`;
 export const PRICE_COUNT = 1;
-import moment from 'moment';
 export const getRandomCount = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));
 export const getRandomPicture = () => {
   return `http://picsum.photos/300/150?r=${Math.random()}`;
 };
 
-export const getRandomParam = (type, count, isDesc = false, isOffer = false, isTime = false, split = `,`) => {
-  const newArray = [];
+export const getRandomParam = (type, count, split = `,`) => {
+  let newArray = [];
 
   const arrayDesc = type.split(split);
   const randomCount = getRandomCount(1, count);
-  for (let i = 0; i < randomCount; i++) {
-    let rand = Math.floor(Math.random() * arrayDesc.length);
-    newArray.push(arrayDesc[rand].trim());
-  }
-  let result = ``;
-  if (isDesc) {
-    result = [...new Set(newArray)].join(`.`);
-  } else if (isOffer) {
-    result = `${[...new Set(newArray)].map((elem) => (`<li><button class="trip-point__offer">${elem}</button></li>`)).join(``)}`;
-  } else if (isTime) {
-    result = newArray.join(``);
-  }
-  return result;
+  const rand = () => Math.floor(Math.random() * arrayDesc.length);
+  newArray = [...new Array(randomCount)].map(() => arrayDesc[rand()].trim());
+  return newArray;
+};
+
+export const addRenderEvents = (numbers) => {
+
+  let arrayRandomEvents = [];
+  arrayRandomEvents = [...new Array(numbers)].map(() => markup[getRandomCount(0, 4)]);
+  // for (let i = 0; i < numbers; i++) {
+  //   arrayRandomEvents.push(markup[getRandomCount(0, 4)]);
+  // }
+  return tripItems.insertAdjacentHTML(`beforeend`, arrayRandomEvents.join(``));
+
 };
 
 export const getIcon = (name) => {
-  let icon = ``;
-  for (let elem of icons) {
-    if (elem.title === name) {
-      icon = elem.icon;
-    }
-  }
-  return icon;
+  return icons[name];
 };
 
 export const getDuration = function (startTime, endTime) {
-  const start = moment(startTime, `HH:mm A`);
-  const end = moment(endTime, `HH:mm A`);
+  const start = moment.utc(startTime, `HH:mm`);
+  const end = moment.utc(endTime, `HH:mm`);
   const diff = moment.utc(end.diff(start)).format(`h[h] m[m]`);
   return diff;
 };
 
-const icons = [{
-  title: `Taxi`,
-  icon: `🚕`,
-},
-{
-  title: `Bus`,
-  icon: `🚌`,
-},
-{
-  title: `Train`,
-  icon: `🚂`,
-},
-{
-  title: `Ship`,
-  icon: `🛳️`,
-},
-{
-  title: `Transport`,
-  icon: `🚊`,
-},
-{
-  title: `Drive`,
-  icon: `🚗`,
-},
-{
-  title: `Flight`,
-  icon: `✈️`,
-},
-{
-  title: `Check-in`,
-  icon: `🏨`,
-},
-{
-  title: `Sightseeing`,
-  icon: `🏛️`,
-},
-{
-  title: `Restaurant`,
-  icon: `🍴`,
-},
-];
+const icons = {
+  Taxi: `🚕`,
+  Bus: `🚌`,
+  Train: `🚂`,
+  Ship: `🛳️`,
+  Transport: `🚊`,
+  Drive: `🚗`,
+  Flight: `✈️`,
+  Checkin: `🏨`,
+  Sightseeing: `🏛️`,
+  Restaurant: `🍴`,
+};
 
 export const filters = [{
   type: `radio`,
