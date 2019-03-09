@@ -16,9 +16,8 @@ export const getRandomPicture = () => {
 
 export const getRandomParam = (type, count, split = `,`) => {
   const arrayDesc = type.split(split);
-  const randomCountArray = getRandomCount(1, count);
-  const randomCount = () => Math.floor(Math.random() * arrayDesc.length);
-  return [...new Array(randomCountArray)].map(() => arrayDesc[randomCount()].trim());
+  const randomIndex = getRandomCount(1, count);
+  return [...new Array(randomIndex)].map(() => arrayDesc[getRandomCount(0, arrayDesc.length - 1)].trim());
 };
 
 export const addRenderEvents = (numbers, template, container) => {
