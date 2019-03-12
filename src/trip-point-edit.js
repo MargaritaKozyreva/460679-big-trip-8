@@ -26,16 +26,6 @@ export class TripPointEdit {
     this._onSubmit = fn;
   }
 
-  bind() {
-    this.element.addEventListener(`submit`, this._onSubmitButtonClick);
-    this.element.addEventListener(`reset`, this._onResetButtonClick);
-  }
-
-  unbind() {
-    this.element.removeEventListener(`submit`, this._onSubmitButtonClick);
-    this.element.removeEventListener(`reset`, this._onResetButtonClick);
-  }
-
   get template() {
     return `
     <article class="point">
@@ -130,6 +120,16 @@ export class TripPointEdit {
   unrender() {
     this.unbind();
     this.element = null;
+  }
+
+  bind() {
+    this.element.addEventListener(`submit`, this._onSubmitButtonClick);
+    this.element.addEventListener(`reset`, this._onResetButtonClick);
+  }
+
+  unbind() {
+    this.element.removeEventListener(`submit`, this._onSubmitButtonClick);
+    this.element.removeEventListener(`reset`, this._onResetButtonClick);
   }
 
   _onSubmitButtonClick(evt) {

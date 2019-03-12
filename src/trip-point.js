@@ -22,18 +22,6 @@ export class TripPoint {
     return constant.getDuration(this._timeStart, this._timeEnd);
   }
 
-  set onClick(fn) {
-    this._onClick = fn;
-  }
-
-  bind() {
-    this.element.addEventListener(`click`, this._onPointClick);
-  }
-
-  unbind() {
-    this.element.removeEventListener(`click`, this._onPointClick);
-  }
-
   get template() {
     return `
 <article class="trip-point">
@@ -50,6 +38,17 @@ export class TripPoint {
 </article>`.trim();
   }
 
+  set onClick(fn) {
+    this._onClick = fn;
+  }
+
+  bind() {
+    this.element.addEventListener(`click`, this._onPointClick);
+  }
+
+  unbind() {
+    this.element.removeEventListener(`click`, this._onPointClick);
+  }
 
   render() {
     this.element = createElement(this.template);
