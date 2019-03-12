@@ -10,6 +10,7 @@ export const TIME_COUNT = 1;
 export const PRICE = `20, 30, 40, 50, 100, 150`;
 export const CURRENCY_RATE = `€`;
 export const PRICE_COUNT = 1;
+export const TRIP_COMPONENT_ARRAY = [];
 export const getRandomCount = (min, max) => Math.floor(min + Math.random() * (max + 1 - min));
 export const getRandomPicture = () => {
   return `http://picsum.photos/300/150?r=${Math.random()}`;

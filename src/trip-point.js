@@ -7,9 +7,12 @@ export class TripPoint {
     this._icons = data.icons;
     this._element = null;
     this._onClick = null;
+    this._onPointClick = this._onPointClick.bind(this);
   }
   _onPointClick() {
-    typeof this._onClick === `function` && this._onClick();
+    if (typeof this._onClick === `function`) {
+      this._onClick();
+    }
   }
 
   get _offers() {
@@ -45,7 +48,11 @@ export class TripPoint {
   }
 
   bind() {
-    this._element.addEventListener(`click`, this._onPointClick.bind(this));
+    this._element.addEventListener(`click`, this._onPointClick);
+  }
+
+  unbind() {
+    this._element.removeEventListener(`click`, this._onPointClick);
   }
 
   get template() {
@@ -72,7 +79,7 @@ export class TripPoint {
   }
 
   unrender() {
-    // this.unbind();
+    this.unbind();
     this._element = null;
   }
 }

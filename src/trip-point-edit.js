@@ -1,5 +1,5 @@
-import {createElement} from './create-element.js';
 import * as constant from './constants.js';
+import {createElement} from './create-element.js';
 
 export class TripPointEdit {
   constructor(data) {
@@ -7,8 +7,24 @@ export class TripPointEdit {
     this._title = data.title;
     this._icons = data.icons;
     this._element = null;
-    this._submit = null;
-    this._reset = null;
+    this._onSubmit = null;
+    this._onReset = null;
+    this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
+    this._onResetButtonClick = this._onResetButtonClick.bind(this);
+  }
+
+  _onSubmitButtonClick(evt) {
+    evt.preventDefault();
+    if (typeof this._onSubmit === `function`) {
+      this._onSubmit();
+    }
+  }
+
+  _onResetButtonClick(evt) {
+    evt.preventDefault();
+    if (typeof this._onReset === `function`) {
+      this._onReset();
+    }
   }
 
   get _offers() {
@@ -39,12 +55,22 @@ export class TripPointEdit {
     return constant.getDuration(this._timeStart, this._timeEnd);
   }
 
-  set submit(fn) {
-    this._submit = fn;
+  set onReset(fn) {
+    this._onReset = fn;
   }
 
-  set reset(fn) {
-    this._reset = fn;
+  set onSubmit(fn) {
+    this._onSubmit = fn;
+  }
+
+  bind() {
+    this._element.addEventListener(`submit`, this._onSubmitButtonClick);
+    this._element.addEventListener(`reset`, this._onResetButtonClick);
+  }
+
+  unbind() {
+    this._element.removeEventListener(`submit`, this._onSubmitButtonClick);
+    this._element.removeEventListener(`reset`, this._onResetButtonClick);
   }
 
   get template() {
@@ -134,11 +160,12 @@ export class TripPointEdit {
 
   render() {
     this._element = createElement(this.template);
+    this.bind();
     return this._element;
   }
 
   unrender() {
-    // this.unbind();
+    this.unbind();
     this._element = null;
   }
 }
