@@ -7,27 +7,27 @@ import * as constant from './constants.js';
 const tripItems = document.querySelector(`.trip-day__items`);
 const tripFilter = document.querySelector(`.trip-filter`);
 
-const addListener = (elem, elemEdit) => {
-  elem.onClick = () => {
-    elemEdit.render();
-    tripItems.replaceChild(elemEdit._element, elem._element);
-    elem.unrender();
+const addListener = (tripPointelem, tripPointelemEdit) => {
+  tripPointelem.onClick = () => {
+    tripPointelemEdit.render();
+    tripItems.replaceChild(tripPointelemEdit.element, tripPointelem.element);
+    tripPointelem.unrender();
   };
 
-  elemEdit.onSubmit = () => {
-    elem.render();
-    tripItems.replaceChild(elem._element, elemEdit._element);
-    elemEdit.unrender();
+  tripPointelemEdit.onSubmit = () => {
+    tripPointelem.render();
+    tripItems.replaceChild(tripPointelem.element, tripPointelemEdit.element);
+    tripPointelemEdit.unrender();
   };
 
-  elemEdit.onReset = () => {
-    elem.render();
-    tripItems.replaceChild(elem._element, elemEdit._element);
-    elemEdit.unrender();
+  tripPointelemEdit.onReset = () => {
+    tripPointelem.render();
+    tripItems.replaceChild(tripPointelem.element, tripPointelemEdit.element);
+    tripPointelemEdit.unrender();
   };
 };
 
-cities.map((item) => {
+cities.forEach((item) => {
   const tripComponent = new TripPoint(item);
   const tripComponentEdit = new TripPointEdit(item);
   tripItems.appendChild(tripComponent.render());

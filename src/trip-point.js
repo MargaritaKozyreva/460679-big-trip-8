@@ -1,42 +1,21 @@
 import * as constant from './constants.js';
 import {createElement} from './create-element.js';
+
 export class TripPoint {
   constructor(data) {
     this._id = data.id;
     this._title = data.title;
     this._icons = data.icons;
-    this._element = null;
+    this._offers = data.offers;
+    this._description = data.description;
+    this._picture = data.picture;
+    this._timeStart = data.timeStart;
+    this._timeEnd = data.timeEnd;
+    this._price = data.price;
+    this._currencyRate = data.currencyRate;
+    this.element = null;
     this._onClick = null;
     this._onPointClick = this._onPointClick.bind(this);
-  }
-  _onPointClick() {
-    if (typeof this._onClick === `function`) {
-      this._onClick();
-    }
-  }
-
-  get _offers() {
-    return constant.getRandomParam(constant.OFFERS, constant.OFFERS_COUNT);
-  }
-
-  get _desc() {
-    return constant.getRandomParam(constant.DESCRIPTION, constant.DESCRIPTIONS_COUNT, `.`);
-  }
-
-  get _pic() {
-    return constant.getRandomPicture();
-  }
-
-  get _timeStart() {
-    return constant.getRandomParam(constant.TIME_START, constant.TIME_COUNT).join(``);
-  }
-
-  get _timeEnd() {
-    return constant.getRandomParam(constant.TIME_END, constant.TIME_COUNT).join(``);
-  }
-
-  get _price() {
-    return `${constant.CURRENCY_RATE} ${constant.getRandomParam(constant.PRICE, constant.PRICE_COUNT)}`;
   }
 
   get _getDuration() {
@@ -48,11 +27,11 @@ export class TripPoint {
   }
 
   bind() {
-    this._element.addEventListener(`click`, this._onPointClick);
+    this.element.addEventListener(`click`, this._onPointClick);
   }
 
   unbind() {
-    this._element.removeEventListener(`click`, this._onPointClick);
+    this.element.removeEventListener(`click`, this._onPointClick);
   }
 
   get template() {
@@ -64,7 +43,7 @@ export class TripPoint {
     <span class="trip-point__timetable">${this._timeStart} — ${this._timeEnd}</span>
     <span class="trip-point__duration">${this._getDuration}</span>
   </p>
-  <p class="trip-point__price">${this._price}</p>
+  <p class="trip-point__price">${this._price} ${this._currencyRate}</p>
   <ul class="trip-point__offers">
     ${this._offers.map((elem) => `<li><button class="trip-point__offer">${elem}</button></li>`).join(``)}
   </ul>
@@ -73,13 +52,19 @@ export class TripPoint {
 
 
   render() {
-    this._element = createElement(this.template);
+    this.element = createElement(this.template);
     this.bind();
-    return this._element;
+    return this.element;
   }
 
   unrender() {
     this.unbind();
-    this._element = null;
+    this.element = null;
+  }
+
+  _onPointClick() {
+    if (typeof this._onClick === `function`) {
+      this._onClick();
+    }
   }
 }
