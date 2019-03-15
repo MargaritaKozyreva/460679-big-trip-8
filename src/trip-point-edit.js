@@ -1,7 +1,8 @@
-import {createElement} from './create-element.js';
+import Component from './component.js';
 
-export class TripPointEdit {
+export class TripPointEdit extends Component {
   constructor(data) {
+    super();
     this._id = data.id;
     this._title = data.title;
     this._icons = data.icons;
@@ -109,17 +110,6 @@ export class TripPointEdit {
   </form>
 </article>
     `.trim();
-  }
-
-  render() {
-    this.element = createElement(this.template);
-    this.bind();
-    return this.element;
-  }
-
-  unrender() {
-    this.unbind();
-    this.element = null;
   }
 
   bind() {

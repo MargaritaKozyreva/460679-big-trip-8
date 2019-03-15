@@ -1,8 +1,9 @@
 import * as constant from './constants.js';
-import {createElement} from './create-element.js';
+import Component from './component.js';
 
-export class TripPoint {
+export class TripPoint extends Component {
   constructor(data) {
+    super();
     this._id = data.id;
     this._title = data.title;
     this._icons = data.icons;
@@ -48,17 +49,6 @@ export class TripPoint {
 
   unbind() {
     this.element.removeEventListener(`click`, this._onPointClick);
-  }
-
-  render() {
-    this.element = createElement(this.template);
-    this.bind();
-    return this.element;
-  }
-
-  unrender() {
-    this.unbind();
-    this.element = null;
   }
 
   _onPointClick() {
