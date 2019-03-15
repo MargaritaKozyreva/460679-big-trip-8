@@ -1,13 +1,10 @@
 import {createElement} from './create-element.js';
 
-export class Component {
+export default class {
   constructor() {
-    if (new.target === Component) {
+    if (new.target === this) {
       throw new Error(`Can't instantiate Component, only concrete one.`);
     }
-  }
-  set onClick(fn) {
-    this._onClick = fn;
   }
 
   bind() {}

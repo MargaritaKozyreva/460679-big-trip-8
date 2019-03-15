@@ -1,5 +1,5 @@
 import * as constant from './constants.js';
-import {Component} from './component.js';
+import Component from './component.js';
 
 export class TripPoint extends Component {
   constructor(data) {
