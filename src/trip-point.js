@@ -1,26 +1,15 @@
-import * as constant from './constants.js';
+import {getDuration} from './constants.js';
 import Component from './component.js';
 
-export class TripPoint extends Component {
+export default class extends Component {
   constructor(data) {
-    super();
-    this._id = data.id;
-    this._title = data.title;
-    this._icons = data.icons;
-    this._offers = data.offers;
-    this._description = data.description;
-    this._picture = data.picture;
-    this._timeStart = data.timeStart;
-    this._timeEnd = data.timeEnd;
-    this._price = data.price;
-    this._currencyRate = data.currencyRate;
-    this.element = null;
-    this._onClick = null;
+    super(data);
     this._onPointClick = this._onPointClick.bind(this);
+    this._onClick = null;
   }
 
   get _getDuration() {
-    return constant.getDuration(this._timeStart, this._timeEnd);
+    return getDuration(this._timeStart, this._timeEnd);
   }
 
   get template() {

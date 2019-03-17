@@ -1,22 +1,12 @@
 import Component from './component.js';
 
-export class TripPointEdit extends Component {
+export default class extends Component {
   constructor(data) {
-    super();
-    this._id = data.id;
-    this._title = data.title;
-    this._icons = data.icons;
-    this._offers = data.offers;
-    this._description = data.description;
-    this._picture = data.picture;
-    this._timeStart = data.timeStart;
-    this._timeEnd = data.timeEnd;
-    this._price = data.price;
-    this.element = null;
-    this._onSubmit = null;
-    this._onReset = null;
+    super(data);
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onResetButtonClick = this._onResetButtonClick.bind(this);
+    this._onSubmit = null;
+    this._onReset = null;
   }
 
   set onReset(fn) {

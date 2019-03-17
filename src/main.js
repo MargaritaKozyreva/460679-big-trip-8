@@ -1,29 +1,30 @@
 import renderFilter from './make-filter.js';
-import {TripPoint} from './trip-point.js';
-import {TripPointEdit} from './trip-point-edit.js';
+import TripPoint from './trip-point.js';
+import TripPointEdit from './trip-point-edit.js';
 import {cities} from './make-cities.js';
 import * as constant from './constants.js';
 
 const tripItems = document.querySelector(`.trip-day__items`);
+const tripTitle = document.querySelector(`.trip-point__title`);
 const tripFilter = document.querySelector(`.trip-filter`);
 
-const addListener = (tripPointelem, tripPointelemEdit) => {
-  tripPointelem.onClick = () => {
-    tripPointelemEdit.render();
-    tripItems.replaceChild(tripPointelemEdit.element, tripPointelem.element);
-    tripPointelem.unrender();
+const addListener = (tripPointElem, tripPointElemEdit) => {
+  tripPointElem.onClick = () => {
+    tripPointElemEdit.render();
+    tripItems.replaceChild(tripPointElemEdit.element, tripPointElem.element);
+    tripPointElem.unrender();
   };
 
-  tripPointelemEdit.onSubmit = () => {
-    tripPointelem.render();
-    tripItems.replaceChild(tripPointelem.element, tripPointelemEdit.element);
-    tripPointelemEdit.unrender();
+  tripPointElemEdit.onSubmit = () => {
+    tripPointElem.render();
+    tripItems.replaceChild(tripPointElem.element, tripPointElemEdit.element);
+    tripPointElemEdit.unrender();
   };
 
-  tripPointelemEdit.onReset = () => {
-    tripPointelem.render();
-    tripItems.replaceChild(tripPointelem.element, tripPointelemEdit.element);
-    tripPointelemEdit.unrender();
+  tripPointElemEdit.onReset = () => {
+    tripPointElem.render();
+    tripItems.replaceChild(tripPointElem.element, tripPointElemEdit.element);
+    tripPointElemEdit.unrender();
   };
 };
 
