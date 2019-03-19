@@ -52,7 +52,6 @@ cities.forEach((item) => {
     item.offers = newObject.offers;
 
     tripComponent.update(item);
-
     tripComponent.render();
     tripItems.replaceChild(tripComponent.element, tripComponentEdit.element);
     tripComponentEdit.unrender();

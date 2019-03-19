@@ -2,29 +2,17 @@ import Component from './component.js';
 
 export default class TripPointEdit extends Component {
   constructor(data) {
-    super();
-
-    this._id = data.id;
-    this._title = data.title;
-    this._icons = data.icons;
-    this._offers = data.offers;
-    this._description = data.description;
-    this._picture = data.picture;
-    this._timeStart = data.timeStart;
-    this._timeEnd = data.timeEnd;
-    this._price = data.price;
-    this._currencyRate = data.currencyRate;
-
-
+    super(data);
     this._onSubmit = null;
     this._onReset = null;
 
     this._state.isFavorite = false;
+    this._state.isOffer = false;
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onResetButtonClick = this._onResetButtonClick.bind(this);
     this._onChangeFavorite = this._onChangeFavorite.bind(this);
-
+    this._onChangeOffer = this._onChangeOffer.bind(this);
 
   }
   _processForm(formData) {
@@ -37,20 +25,24 @@ export default class TripPointEdit extends Component {
       offers: new Set(),
     };
 
-    const pointEditMapper = TripPointEdit.createMapper(newFields);
-
-    for (const pair of formData.entries()) {
-      const [property, value] = pair;
-      pointEditMapper[property] && pointEditMapper[property](value);
-      // console.log(pair)
+    const pointEditMapper = TripPointEdit.createMapper(newFields); // возвращаем объект с новыми данными от пользователя
+    for (const pair of formData.entries()) { // берем поля нашей текущей формы и проходимся по ним циклом
+      const [key, value] = pair; // берем ключ значение каждого поля
+      if (pointEditMapper[key]) {
+        pointEditMapper[key](value);
+      }
     }
-    // console.log(newFields)
     newFields.offers = [...newFields.offers];
     return newFields;
   }
   _onChangeFavorite() {
     this._state.isFavorite = !this._state.isFavorite;
   }
+
+  _onChangeOffer() {
+    this._state.isOffer = !this._state.isOffer;
+  }
+
   _onChangeCursor(evt) {
     evt.preventDefault();
     evt.target.style.cursor = `pointer`;
@@ -121,7 +113,7 @@ export default class TripPointEdit extends Component {
       </div>
 
       <div class="paint__favorite-wrap">
-        <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite">
+        <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._state.isFavorite ? `checked` : ``}>
         <label class="point__favorite" for="favorite">favorite</label>
       </div>
     </header>
@@ -131,11 +123,11 @@ export default class TripPointEdit extends Component {
         <h3 class="point__details-title">offers</h3>
 
         <div class="point__offers-wrap">
-        ${this._offers && this._offers.length > 0 ? this._offers.map((offer) => `
-          <input class="point__offers-input visually-hidden" type="checkbox" id="${offer}" name="offer" value="${offer}">
+        ${this._offers.map((offer) => `
+          <input class="point__offers-input visually-hidden" type="checkbox" id="${offer}" name="offer" value="${offer}" ${this._state.isOffer ? `checked` : ``}>
           <label for="${offer}" class="point__offers-label">
             <span class="point__offer-service">${offer}</span> + €<span class="point__offer-price">${this._price}</span>
-          </label>`.trim()).join(``) : ``}
+          </label>`.trim()).join(``)}
         </div>
 
       </section>
@@ -156,12 +148,16 @@ export default class TripPointEdit extends Component {
   bind() {
     this.element.querySelector(`.point__buttons [type=submit]`).addEventListener(`click`, this._onSubmitButtonClick);
     this.element.querySelector(`.point__buttons [type=reset]`).addEventListener(`click`, this._onResetButtonClick);
+    this.element.querySelector(`.point__favorite-input`).addEventListener(`click`, this._onChangeFavorite);
+    this.element.querySelector(`.point__offers-input`).addEventListener(`click`, this._onChangeOffer);
     this.element.querySelector(`.point__time`).addEventListener(`mouseover`, this._onChangeCursor);
   }
 
   unbind() {
     this.element.querySelector(`.point__buttons [type=submit]`).removeEventListener(`click`, this._onSubmitButtonClick);
     this.element.querySelector(`.point__buttons [type=reset]`).removeEventListener(`click`, this._onResetButtonClick);
+    this.element.querySelector(`.point__favorite-input`).removeEventListener(`click`, this._onChangeFavorite);
+    this.element.querySelector(`.point__offers-input`).removeEventListener(`click`, this._onChangeOffer);
   }
 
   update(data) {
@@ -169,7 +165,6 @@ export default class TripPointEdit extends Component {
     this._timeStart = data.timeStart;
     this._timeEnd = data.timeEnd;
     this._price = data.price;
-    this._offers = data.offers;
   }
 
   static createMapper(target) {
@@ -192,9 +187,8 @@ export default class TripPointEdit extends Component {
 
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
-    const formData = new FormData(this._element.querySelector(`.point form`)); // получили все поля нашей формы
+    const formData = new FormData(this._element.querySelector(`.point form`)); // получили все поля формы
     const newData = this._processForm(formData); // получили новые данные кот ввел пользователь
-    // console.log(newData)
     this.update(newData); // рендер шаблона с новыми данными
     return typeof this._onSubmit === `function` && this._onSubmit(newData);
   }

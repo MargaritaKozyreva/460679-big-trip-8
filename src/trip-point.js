@@ -3,19 +3,7 @@ import Component from './component.js';
 
 export default class TripPoint extends Component {
   constructor(data) {
-    super();
-
-    this._id = data.id;
-    this._title = data.title;
-    this._icons = data.icons;
-    this._offers = data.offers;
-    this._description = data.description;
-    this._picture = data.picture;
-    this._timeStart = data.timeStart;
-    this._timeEnd = data.timeEnd;
-    this._price = data.price;
-    this._currencyRate = data.currencyRate;
-
+    super(data);
     this._onClick = null;
     this._onPointClick = this._onPointClick.bind(this);
   }
@@ -35,7 +23,7 @@ export default class TripPoint extends Component {
   </p>
   <p class="trip-point__price">${this._price} ${this._currencyRate}</p>
   <ul class="trip-point__offers">
-    ${this._offers && this._offers.length > 0 ? this._offers.map((elem) => `<li><button class="trip-point__offer">${elem}</button></li>`).join(``) : ``}
+    ${this._offers && this._offers.length > 0 ? this._offers.map((elem) => `<li><button class="trip-point__offer">${elem}</button></li>`).join(``) : `Не выбрано`}
   </ul>
 </article>`.trim();
   }
@@ -54,10 +42,10 @@ export default class TripPoint extends Component {
 
   update(data) {
     this._id = data.id;
-    this._timeStart = data._timeStart;
-    this._timeEnd = data._timeEnd;
-    this._price = data._price;
-    this._offers = data._offers;
+    this._timeStart = data.timeStart;
+    this._timeEnd = data.timeEnd;
+    this._price = data.price;
+    this._offers = data.offers;
   }
 
   _onPointClick() {
