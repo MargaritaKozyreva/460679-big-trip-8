@@ -40,6 +40,14 @@ export default class extends Component {
     this.element.removeEventListener(`click`, this._onPointClick);
   }
 
+  update(data) {
+    this._id = data.id;
+    this._timeStart = data._timeStart;
+    this._timeEnd = data._timeEnd;
+    this._price = data._price;
+    this._offers = data._offers;
+  }
+
   _onPointClick() {
     if (typeof this._onClick === `function`) {
       this._onClick();

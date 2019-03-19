@@ -13,6 +13,7 @@ export default class {
     this._price = data.price;
     this._currencyRate = data.currencyRate;
     this._element = null;
+    this._state = {};
     if (new.target === this) {
       throw new Error(`Can't instantiate Component, only concrete one.`);
     }
@@ -40,5 +41,13 @@ export default class {
     this.unbind();
     this._element.remove();
     this._element = null;
+  }
+
+  update(data) {
+    this._id = data._id;
+    this._timeStart = data._timeStart;
+    this._timeEnd = data._timeEnd;
+    this._price = data._price;
+    this._offers = data._offers;
   }
 }

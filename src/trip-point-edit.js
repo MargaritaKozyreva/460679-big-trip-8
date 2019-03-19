@@ -4,9 +4,71 @@ export default class extends Component {
   constructor(data) {
     super(data);
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
-    this._onResetButtonClick = this._onResetButtonClick.bind(this);
     this._onSubmit = null;
+
+    this._onResetButtonClick = this._onResetButtonClick.bind(this);
     this._onReset = null;
+
+    this._onChangeDate = this._onChangeDate.bind(this);
+    this._state._isDate = false;
+
+    this._onChangeID = this._onChangeID.bind(this);
+    this._isID = false;
+
+    this._onChangeOffer = this._onChangeOffer.bind(this);
+    this._isOffer = false;
+
+    this._onChangePrice = this._onChangePrice.bind(this);
+    this._state._isPrice = false;
+
+  }
+  _processForm(formData) {
+    const entry = {
+      _id: ``,
+      _timeStart: ``,
+      _timeEnd: ``,
+      _price: ``,
+      _offers: new Set(),
+    };
+  }
+
+  _onChangeDate(evt) {
+    this._state._isDate = !this._state._isDate;
+    this.unbind();
+    console.log(evt.target.value);
+    // this._partialUpdate();
+    this.bind();
+  }
+
+  _onChangeID(evt) {
+    this._state._isID = !this._state._isID;
+    this.unbind();
+    console.log(evt.target.value);
+    // this._partialUpdate();
+    this.bind();
+  }
+
+  _onChangeOffer(evt) {
+    this._state._isOffer = !this._state._isOffer;
+    this.unbind();
+    console.log(evt.target);
+    // this._partialUpdate();
+    this.bind();
+  }
+
+  _onChangePrice(evt) {
+    this._state._isPrice = !this._state._isPrice;
+    this.unbind();
+    if(evt.target.className === `point__input`){
+    console.log(evt.target.value);
+    }
+    // this._partialUpdate();
+    this.bind();
+  }
+
+  _onChangeCursor(evt) {
+    evt.preventDefault();
+    evt.target.style.cursor = `pointer`;
   }
 
   set onReset(fn) {
@@ -81,7 +143,7 @@ export default class extends Component {
 
         <div class="point__offers-wrap">
         ${this._offers.map((offer) => `
-          <input class="point__offers-input visually-hidden" type="checkbox" id="${offer}" name="offer" value="${offer}">
+          <input class="point__offers-input visually-hidden" type="checkbox" id="${offer}" name="offer" value="${offer}" ${this._offer === offer && `checked`} >
           <label for="${offer}" class="point__offers-label">
             <span class="point__offer-service">${offer}</span> + €<span class="point__offer-price">${this._price}</span>
           </label>`.trim()).join(``)}
@@ -105,11 +167,33 @@ export default class extends Component {
   bind() {
     this.element.addEventListener(`submit`, this._onSubmitButtonClick);
     this.element.addEventListener(`reset`, this._onResetButtonClick);
+    this.element.querySelector(`.point__time`).addEventListener(`mouseover`, this._onChangeCursor);
+    this.element.querySelector(`.point__time`).addEventListener(`click`, this._onChangeDate);
+    this.element.querySelector(`.point__destination-input`).addEventListener(`click`, this._onChangeID);
+    this.element.querySelector(`.point__price`).addEventListener(`click`, this._onChangePrice);
+    Array.from(this.element.querySelectorAll(`.point__offers-label`)).forEach(() => addEventListener(`click`, this._onChangeOffer));
   }
 
   unbind() {
     this.element.removeEventListener(`submit`, this._onSubmitButtonClick);
     this.element.removeEventListener(`reset`, this._onResetButtonClick);
+  }
+
+  update(data) {
+    this._id = data.id;
+    this._timeStart = data.timeStart;
+    this._timeEnd = data.timeEnd;
+    this._price = data.price;
+    this._offers = data.offers;
+  }
+
+  static createMapper(target) {
+    return {
+      destination: (value) => target.id = value,
+      time: (value) => target.timeStart = value,
+      price: (value) => target.price = value,
+      offer: (value) => target.offers[value] = true,
+    };
   }
 
   _onSubmitButtonClick(evt) {
@@ -126,4 +210,3 @@ export default class extends Component {
     }
   }
 }
-
