@@ -1,11 +1,23 @@
 import {getDuration} from './constants.js';
 import Component from './component.js';
 
-export default class extends Component {
+export default class TripPoint extends Component {
   constructor(data) {
-    super(data);
-    this._onPointClick = this._onPointClick.bind(this);
+    super();
+
+    this._id = data.id;
+    this._title = data.title;
+    this._icons = data.icons;
+    this._offers = data.offers;
+    this._description = data.description;
+    this._picture = data.picture;
+    this._timeStart = data.timeStart;
+    this._timeEnd = data.timeEnd;
+    this._price = data.price;
+    this._currencyRate = data.currencyRate;
+
     this._onClick = null;
+    this._onPointClick = this._onPointClick.bind(this);
   }
 
   get _getDuration() {
@@ -23,7 +35,7 @@ export default class extends Component {
   </p>
   <p class="trip-point__price">${this._price} ${this._currencyRate}</p>
   <ul class="trip-point__offers">
-    ${this._offers.map((elem) => `<li><button class="trip-point__offer">${elem}</button></li>`).join(``)}
+    ${this._offers && this._offers.length > 0 ? this._offers.map((elem) => `<li><button class="trip-point__offer">${elem}</button></li>`).join(``) : ``}
   </ul>
 </article>`.trim();
   }

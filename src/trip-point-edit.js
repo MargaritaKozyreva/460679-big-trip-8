@@ -1,74 +1,63 @@
 import Component from './component.js';
 
-export default class extends Component {
+export default class TripPointEdit extends Component {
   constructor(data) {
-    super(data);
-    this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
-    this._onSubmit = null;
+    super();
 
-    this._onResetButtonClick = this._onResetButtonClick.bind(this);
+    this._id = data.id;
+    this._title = data.title;
+    this._icons = data.icons;
+    this._offers = data.offers;
+    this._description = data.description;
+    this._picture = data.picture;
+    this._timeStart = data.timeStart;
+    this._timeEnd = data.timeEnd;
+    this._price = data.price;
+    this._currencyRate = data.currencyRate;
+
+
+    this._onSubmit = null;
     this._onReset = null;
 
-    this._onChangeDate = this._onChangeDate.bind(this);
-    this._state._isDate = false;
+    this._state.isFavorite = false;
 
-    this._onChangeID = this._onChangeID.bind(this);
-    this._isID = false;
+    this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
+    this._onResetButtonClick = this._onResetButtonClick.bind(this);
+    this._onChangeFavorite = this._onChangeFavorite.bind(this);
 
-    this._onChangeOffer = this._onChangeOffer.bind(this);
-    this._isOffer = false;
-
-    this._onChangePrice = this._onChangePrice.bind(this);
-    this._state._isPrice = false;
 
   }
   _processForm(formData) {
-    const entry = {
-      _id: ``,
-      _timeStart: ``,
-      _timeEnd: ``,
-      _price: ``,
-      _offers: new Set(),
+    const newFields = {
+      day: new Date(),
+      id: ``,
+      timeStart: ``,
+      timeEnd: ``,
+      price: ``,
+      offers: new Set(),
     };
-  }
 
-  _onChangeDate(evt) {
-    this._state._isDate = !this._state._isDate;
-    this.unbind();
-    console.log(evt.target.value);
-    // this._partialUpdate();
-    this.bind();
-  }
+    const pointEditMapper = TripPointEdit.createMapper(newFields);
 
-  _onChangeID(evt) {
-    this._state._isID = !this._state._isID;
-    this.unbind();
-    console.log(evt.target.value);
-    // this._partialUpdate();
-    this.bind();
-  }
-
-  _onChangeOffer(evt) {
-    this._state._isOffer = !this._state._isOffer;
-    this.unbind();
-    console.log(evt.target);
-    // this._partialUpdate();
-    this.bind();
-  }
-
-  _onChangePrice(evt) {
-    this._state._isPrice = !this._state._isPrice;
-    this.unbind();
-    if(evt.target.className === `point__input`){
-    console.log(evt.target.value);
+    for (const pair of formData.entries()) {
+      const [property, value] = pair;
+      pointEditMapper[property] && pointEditMapper[property](value);
+      // console.log(pair)
     }
-    // this._partialUpdate();
-    this.bind();
+    // console.log(newFields)
+    newFields.offers = [...newFields.offers];
+    return newFields;
   }
-
+  _onChangeFavorite() {
+    this._state.isFavorite = !this._state.isFavorite;
+  }
   _onChangeCursor(evt) {
     evt.preventDefault();
     evt.target.style.cursor = `pointer`;
+  }
+
+  _partialUpdate() {
+    this._element.innerHTML = this.template;
   }
 
   set onReset(fn) {
@@ -117,7 +106,7 @@ export default class extends Component {
 
       <label class="point__time">
         choose time
-        <input class="point__input" type="text" value="${this._timeStart} — ${this._timeEnd}" name="time" placeholder=${this._timeStart} — ${this._timeEnd}>
+        <input class="point__input" type="text" value="${this._timeStart} — ${this._timeEnd}" name="time" placeholder="00:00 — 00:00" >
       </label>
 
       <label class="point__price">
@@ -142,11 +131,11 @@ export default class extends Component {
         <h3 class="point__details-title">offers</h3>
 
         <div class="point__offers-wrap">
-        ${this._offers.map((offer) => `
-          <input class="point__offers-input visually-hidden" type="checkbox" id="${offer}" name="offer" value="${offer}" ${this._offer === offer && `checked`} >
+        ${this._offers && this._offers.length > 0 ? this._offers.map((offer) => `
+          <input class="point__offers-input visually-hidden" type="checkbox" id="${offer}" name="offer" value="${offer}">
           <label for="${offer}" class="point__offers-label">
             <span class="point__offer-service">${offer}</span> + €<span class="point__offer-price">${this._price}</span>
-          </label>`.trim()).join(``)}
+          </label>`.trim()).join(``) : ``}
         </div>
 
       </section>
@@ -165,18 +154,14 @@ export default class extends Component {
   }
 
   bind() {
-    this.element.addEventListener(`submit`, this._onSubmitButtonClick);
-    this.element.addEventListener(`reset`, this._onResetButtonClick);
+    this.element.querySelector(`.point__buttons [type=submit]`).addEventListener(`click`, this._onSubmitButtonClick);
+    this.element.querySelector(`.point__buttons [type=reset]`).addEventListener(`click`, this._onResetButtonClick);
     this.element.querySelector(`.point__time`).addEventListener(`mouseover`, this._onChangeCursor);
-    this.element.querySelector(`.point__time`).addEventListener(`click`, this._onChangeDate);
-    this.element.querySelector(`.point__destination-input`).addEventListener(`click`, this._onChangeID);
-    this.element.querySelector(`.point__price`).addEventListener(`click`, this._onChangePrice);
-    Array.from(this.element.querySelectorAll(`.point__offers-label`)).forEach(() => addEventListener(`click`, this._onChangeOffer));
   }
 
   unbind() {
-    this.element.removeEventListener(`submit`, this._onSubmitButtonClick);
-    this.element.removeEventListener(`reset`, this._onResetButtonClick);
+    this.element.querySelector(`.point__buttons [type=submit]`).removeEventListener(`click`, this._onSubmitButtonClick);
+    this.element.querySelector(`.point__buttons [type=reset]`).removeEventListener(`click`, this._onResetButtonClick);
   }
 
   update(data) {
@@ -189,18 +174,29 @@ export default class extends Component {
 
   static createMapper(target) {
     return {
-      destination: (value) => target.id = value,
-      time: (value) => target.timeStart = value,
-      price: (value) => target.price = value,
-      offer: (value) => target.offers[value] = true,
+      'destination': (value) => {
+        target.id = value;
+      },
+      'time': (value) => {
+        target.timeStart = value.split(`—`)[0].trim();
+        target.timeEnd = value.split(`—`)[1].trim();
+      },
+      'price': (value) => {
+        target.price = value;
+      },
+      'offer': (value) => {
+        target.offers.add(value);
+      },
     };
   }
 
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
-    if (typeof this._onSubmit === `function`) {
-      this._onSubmit();
-    }
+    const formData = new FormData(this._element.querySelector(`.point form`)); // получили все поля нашей формы
+    const newData = this._processForm(formData); // получили новые данные кот ввел пользователь
+    // console.log(newData)
+    this.update(newData); // рендер шаблона с новыми данными
+    return typeof this._onSubmit === `function` && this._onSubmit(newData);
   }
 
   _onResetButtonClick(evt) {
