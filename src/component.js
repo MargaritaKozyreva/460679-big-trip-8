@@ -1,17 +1,7 @@
 import {createElement} from './create-element.js';
 
 export default class {
-  constructor(data) {
-    this._id = data.id;
-    this._title = data.title;
-    this._icons = data.icons;
-    this._offers = data.offers;
-    this._description = data.description;
-    this._picture = data.picture;
-    this._timeStart = data.timeStart;
-    this._timeEnd = data.timeEnd;
-    this._price = data.price;
-    this._currencyRate = data.currencyRate;
+  constructor() {
     this._element = null;
     this._state = {};
     if (new.target === this) {

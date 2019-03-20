@@ -2,18 +2,30 @@ import Component from './component.js';
 
 export default class TripPointEdit extends Component {
   constructor(data) {
-    super(data);
+    super();
+
+    this._id = data.id;
+    this._title = data.title;
+    this._icons = data.icons;
+    this._offers = data.offers;
+    this._offersObj = this.offersObj;
+    this._description = data.description;
+    this._picture = data.picture;
+    this._timeStart = data.timeStart;
+    this._timeEnd = data.timeEnd;
+    this._price = data.price;
+    this._currencyRate = data.currencyRate;
+
     this._onSubmit = null;
     this._onReset = null;
 
     this._state.isFavorite = false;
-    this._state.isOffer = false;
+    this._state.isSelectedOffer = false;
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onResetButtonClick = this._onResetButtonClick.bind(this);
     this._onChangeFavorite = this._onChangeFavorite.bind(this);
     this._onChangeOffer = this._onChangeOffer.bind(this);
-
   }
   _processForm(formData) {
     const newFields = {
@@ -40,7 +52,7 @@ export default class TripPointEdit extends Component {
   }
 
   _onChangeOffer() {
-    this._state.isOffer = !this._state.isOffer;
+    this._state.isSelectedOffer = !this._state.isSelectedOffer;
   }
 
   _onChangeCursor(evt) {
@@ -50,6 +62,16 @@ export default class TripPointEdit extends Component {
 
   _partialUpdate() {
     this._element.innerHTML = this.template;
+  }
+
+  get offersObj() {
+    const offers = {};
+    let _offersArray = this._offers;
+    for (const pair of _offersArray.entries()) {
+      const key = pair[1];
+      offers[key] = false;
+    }
+    return offers;
   }
 
   set onReset(fn) {
@@ -123,8 +145,8 @@ export default class TripPointEdit extends Component {
         <h3 class="point__details-title">offers</h3>
 
         <div class="point__offers-wrap">
-        ${this._offers.map((offer) => `
-          <input class="point__offers-input visually-hidden" type="checkbox" id="${offer}" name="offer" value="${offer}" ${this._state.isOffer ? `checked` : ``}>
+        ${Object.keys(this._offersObj).map((offer) => `
+          <input class="point__offers-input visually-hidden" type="checkbox" id="${offer}" name="offer" value="${offer}" ${offer && this._state.isSelectedOffer ? `checked` : ``}>
           <label for="${offer}" class="point__offers-label">
             <span class="point__offer-service">${offer}</span> + €<span class="point__offer-price">${this._price}</span>
           </label>`.trim()).join(``)}
@@ -149,15 +171,14 @@ export default class TripPointEdit extends Component {
     this.element.querySelector(`.point__buttons [type=submit]`).addEventListener(`click`, this._onSubmitButtonClick);
     this.element.querySelector(`.point__buttons [type=reset]`).addEventListener(`click`, this._onResetButtonClick);
     this.element.querySelector(`.point__favorite-input`).addEventListener(`click`, this._onChangeFavorite);
-    this.element.querySelector(`.point__offers-input`).addEventListener(`click`, this._onChangeOffer);
+    Array.from(this.element.querySelectorAll(`.point__offers-input`)).forEach((it) => it.addEventListener(`click`, this._onChangeOffer));
     this.element.querySelector(`.point__time`).addEventListener(`mouseover`, this._onChangeCursor);
   }
 
   unbind() {
     this.element.querySelector(`.point__buttons [type=submit]`).removeEventListener(`click`, this._onSubmitButtonClick);
     this.element.querySelector(`.point__buttons [type=reset]`).removeEventListener(`click`, this._onResetButtonClick);
-    this.element.querySelector(`.point__favorite-input`).removeEventListener(`click`, this._onChangeFavorite);
-    this.element.querySelector(`.point__offers-input`).removeEventListener(`click`, this._onChangeOffer);
+    Array.from(this.element.querySelectorAll(`.point__offers-input`)).forEach((it) => it.removeEventListener(`click`, this._onChangeOffer));
   }
 
   update(data) {
@@ -165,6 +186,7 @@ export default class TripPointEdit extends Component {
     this._timeStart = data.timeStart;
     this._timeEnd = data.timeEnd;
     this._price = data.price;
+    this._offers = data.offers;
   }
 
   static createMapper(target) {
