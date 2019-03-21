@@ -8,7 +8,6 @@ export default class TripPointEdit extends Component {
     this._title = data.title;
     this._icons = data.icons;
     this._offers = data.offers;
-    this._offersObj = this.offersObj;
     this._description = data.description;
     this._picture = data.picture;
     this._timeStart = data.timeStart;
@@ -20,7 +19,7 @@ export default class TripPointEdit extends Component {
     this._onReset = null;
 
     this._state.isFavorite = false;
-    this._state.isSelectedOffer = false;
+    this._state.isSelectedOffer = this.offersObj;
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onResetButtonClick = this._onResetButtonClick.bind(this);
@@ -34,12 +33,12 @@ export default class TripPointEdit extends Component {
       timeStart: ``,
       timeEnd: ``,
       price: ``,
-      offers: new Set(),
+      offers: Object.entries(this._state.isSelectedOffer), // 3. Присваиваем в поле offers наш созданный объект
     };
 
-    const pointEditMapper = TripPointEdit.createMapper(newFields); // возвращаем объект с новыми данными от пользователя
-    for (const pair of formData.entries()) { // берем поля нашей текущей формы и проходимся по ним циклом
-      const [key, value] = pair; // берем ключ значение каждого поля
+    const pointEditMapper = TripPointEdit.createMapper(newFields);
+    for (const pair of formData.entries()) {
+      const [key, value] = pair;
       if (pointEditMapper[key]) {
         pointEditMapper[key](value);
       }
@@ -51,8 +50,13 @@ export default class TripPointEdit extends Component {
     this._state.isFavorite = !this._state.isFavorite;
   }
 
-  _onChangeOffer() {
-    this._state.isSelectedOffer = !this._state.isSelectedOffer;
+  _onChangeOffer(evt) { // 2. Если по клику текущий элемент равен ключу в созданном объекте offersObj -> меняем его value
+    let currentItem = evt.target.value;
+    for (const [key] of Object.entries(this._state.isSelectedOffer)) {
+      if (key === currentItem) {
+        this._state.isSelectedOffer[key] = !this._state.isSelectedOffer[key];
+      }
+    }
   }
 
   _onChangeCursor(evt) {
@@ -64,10 +68,9 @@ export default class TripPointEdit extends Component {
     this._element.innerHTML = this.template;
   }
 
-  get offersObj() {
+  get offersObj() { // 1. создаем объект по массиву offers, изначально value каждого поля false
     const offers = {};
-    let _offersArray = this._offers;
-    for (const pair of _offersArray.entries()) {
+    for (const pair of this._offers.entries()) {
       const key = pair[1];
       offers[key] = false;
     }
@@ -145,10 +148,10 @@ export default class TripPointEdit extends Component {
         <h3 class="point__details-title">offers</h3>
 
         <div class="point__offers-wrap">
-        ${Object.keys(this._offersObj).map((offer) => `
-          <input class="point__offers-input visually-hidden" type="checkbox" id="${offer}" name="offer" value="${offer}" ${offer && this._state.isSelectedOffer ? `checked` : ``}>
-          <label for="${offer}" class="point__offers-label">
-            <span class="point__offer-service">${offer}</span> + €<span class="point__offer-price">${this._price}</span>
+        ${Object.entries(this._state.isSelectedOffer).map((offer) => `
+          <input class="point__offers-input visually-hidden" type="checkbox" id="${offer[0]}" name="offer" value="${offer[0]}" ${offer[1] ? `checked` : ``}>
+          <label for="${offer[0]}" class="point__offers-label">
+            <span class="point__offer-service">${offer[0]}</span> + €<span class="point__offer-price">${this._price}</span>
           </label>`.trim()).join(``)}
         </div>
 
@@ -186,7 +189,7 @@ export default class TripPointEdit extends Component {
     this._timeStart = data.timeStart;
     this._timeEnd = data.timeEnd;
     this._price = data.price;
-    this._offers = data.offers;
+    this._offers = this._state.isSelectedOffer;
   }
 
   static createMapper(target) {
@@ -201,17 +204,14 @@ export default class TripPointEdit extends Component {
       'price': (value) => {
         target.price = value;
       },
-      'offer': (value) => {
-        target.offers.add(value);
-      },
     };
   }
 
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
-    const formData = new FormData(this._element.querySelector(`.point form`)); // получили все поля формы
-    const newData = this._processForm(formData); // получили новые данные кот ввел пользователь
-    this.update(newData); // рендер шаблона с новыми данными
+    const formData = new FormData(this._element.querySelector(`.point form`));
+    const newData = this._processForm(formData);
+    this.update(newData);
     return typeof this._onSubmit === `function` && this._onSubmit(newData);
   }
 

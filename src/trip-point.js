@@ -35,7 +35,7 @@ export default class TripPoint extends Component {
   </p>
   <p class="trip-point__price">${this._price} ${this._currencyRate}</p>
   <ul class="trip-point__offers">
-    ${this._offers && this._offers.length > 0 ? this._offers.map((elem) => `<li><button class="trip-point__offer">${elem}</button></li>`).join(``) : `Не выбрано`}
+    ${this._offers.map((elems) => elems.length > 0 && elems[1] === true ? `<li><button class="trip-point__offer">${elems[0]}</button></li>` : ``).join(``)}
   </ul>
 </article>`.trim();
   }
