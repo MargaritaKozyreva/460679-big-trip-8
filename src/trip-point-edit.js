@@ -19,7 +19,7 @@ export default class TripPointEdit extends Component {
     this._onReset = null;
 
     this._state.isFavorite = false;
-    this._state.isSelectedOffer = this.offersObj;
+    this._state.isSelectedOffer = this._getStateFromOffers();
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onResetButtonClick = this._onResetButtonClick.bind(this);
@@ -33,7 +33,7 @@ export default class TripPointEdit extends Component {
       timeStart: ``,
       timeEnd: ``,
       price: ``,
-      offers: Object.entries(this._state.isSelectedOffer), // 3. Присваиваем в поле offers наш созданный объект
+      offers: new Map(Object.entries(this._state.isSelectedOffer)), // 3. Присваиваем в поле offers наш созданный объект
     };
 
     const pointEditMapper = TripPointEdit.createMapper(newFields);
@@ -50,8 +50,8 @@ export default class TripPointEdit extends Component {
     this._state.isFavorite = !this._state.isFavorite;
   }
 
-  _onChangeOffer(evt) { // 2. Если по клику текущий элемент равен ключу в созданном объекте offersObj -> меняем его value
-    let currentItem = evt.target.value;
+  _onChangeOffer(evt) { // 2. Если по клику текущий элемент равен ключу в созданном объекте _offersObj -> меняем его value
+    const currentItem = evt.target.value;
     for (const [key] of Object.entries(this._state.isSelectedOffer)) {
       if (key === currentItem) {
         this._state.isSelectedOffer[key] = !this._state.isSelectedOffer[key];
@@ -68,13 +68,20 @@ export default class TripPointEdit extends Component {
     this._element.innerHTML = this.template;
   }
 
-  get offersObj() { // 1. создаем объект по массиву offers, изначально value каждого поля false
-    const offers = {};
-    for (const pair of this._offers.entries()) {
-      const key = pair[1];
-      offers[key] = false;
-    }
-    return offers;
+  // get _getStateFromOffers() { // 1. создаем объект по массиву offers, изначально value каждого поля false
+  //   const offers = {};
+  //   for (const pair of this._offers.entries()) {
+  //     const key = pair[1];
+  //     offers[key] = false;
+  //   }
+  //   return offers;
+  // }
+
+  _getStateFromOffers() {
+    return this._offers.reduce(function (obj, key) {
+      obj[key] = false;
+      return obj;
+    }, {});
   }
 
   set onReset(fn) {
@@ -203,6 +210,9 @@ export default class TripPointEdit extends Component {
       },
       'price': (value) => {
         target.price = value;
+      },
+      'offers': (value) => {
+        target.offers[value] = true;
       },
     };
   }
