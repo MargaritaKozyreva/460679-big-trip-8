@@ -55,6 +55,7 @@ cities.forEach((item) => {
     tripComponent.render();
     tripItems.replaceChild(tripComponent.element, tripComponentEdit.element);
     tripComponentEdit.unrender();
+    console.log(tripComponent)
   };
 
   tripComponentEdit.onReset = () => {

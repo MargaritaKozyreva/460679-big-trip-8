@@ -1,4 +1,6 @@
 import Component from './component.js';
+import flatpickr from "flatpickr";
+import '/flatpickr/dist/flatpickr.min.css';
 
 export default class TripPointEdit extends Component {
   constructor(data) {
@@ -17,6 +19,7 @@ export default class TripPointEdit extends Component {
 
     this._onSubmit = null;
     this._onReset = null;
+    this._dateFlatpickr = null;
 
     this._state.isFavorite = false;
     this._state.isSelectedOffer = this._getStateFromOffers();
@@ -183,6 +186,8 @@ export default class TripPointEdit extends Component {
     this.element.querySelector(`.point__favorite-input`).addEventListener(`click`, this._onChangeFavorite);
     Array.from(this.element.querySelectorAll(`.point__offers-input`)).forEach((it) => it.addEventListener(`click`, this._onChangeOffer));
     this.element.querySelector(`.point__time`).addEventListener(`mouseover`, this._onChangeCursor);
+    flatpickr(this.element.querySelector(`.point__time .point__input`), {enableTime: true, noCalendar: true, altInput: true, altFormat: `h:i K`, dateFormat: `h:i K`});
+    // flatpickr(".card__date", { altInput: true, altFormat: "j F", dateFormat: "j F" });
   }
 
   unbind() {
