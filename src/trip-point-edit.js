@@ -1,6 +1,6 @@
 import Component from './component.js';
 import flatpickr from "flatpickr";
-import '/flatpickr/dist/flatpickr.min.css';
+import "flatpickr/dist/flatpickr.min.css";
 
 export default class TripPointEdit extends Component {
   constructor(data) {
