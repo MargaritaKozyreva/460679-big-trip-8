@@ -36,7 +36,7 @@ export default class TripPointEdit extends Component {
       timeStart: ``,
       timeEnd: ``,
       price: ``,
-      offers: new Map(Object.entries(this._state.isSelectedOffer)), // 3. Присваиваем в поле offers наш созданный объект
+      offers: Object.entries(this._state.isSelectedOffer), // 3. Присваиваем в поле offers наш созданный объект
     };
 
     const pointEditMapper = TripPointEdit.createMapper(newFields);
@@ -54,12 +54,7 @@ export default class TripPointEdit extends Component {
   }
 
   _onChangeOffer(evt) { // 2. Если по клику текущий элемент равен ключу в созданном объекте _offersObj -> меняем его value
-    const currentItem = evt.target.value;
-    for (const [key] of Object.entries(this._state.isSelectedOffer)) {
-      if (key === currentItem) {
-        this._state.isSelectedOffer[key] = !this._state.isSelectedOffer[key];
-      }
-    }
+    this._state.isSelectedOffer[evt.target.value] = !this._state.isSelectedOffer[evt.target.value];
   }
 
   _onChangeCursor(evt) {
@@ -201,7 +196,7 @@ export default class TripPointEdit extends Component {
     this._timeStart = data.timeStart;
     this._timeEnd = data.timeEnd;
     this._price = data.price;
-    this._offers = this._state.isSelectedOffer;
+    this._offers = this.offers;
   }
 
   static createMapper(target) {
