@@ -22,7 +22,7 @@ export default class TripPointEdit extends Component {
     this._dateFlatpickr = null;
 
     this._state.isFavorite = false;
-    this._state.isSelectedOffer = this._getStateFromOffers();
+    this._state.checkingOffersArray = [];
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onResetButtonClick = this._onResetButtonClick.bind(this);
@@ -36,7 +36,7 @@ export default class TripPointEdit extends Component {
       timeStart: ``,
       timeEnd: ``,
       price: ``,
-      offers: this._state.isSelectedOffer, // 3. Присваиваем в поле offers наш созданный объект
+      offers: new Array(),
     };
 
     const pointEditMapper = TripPointEdit.createMapper(newFields);
@@ -52,8 +52,8 @@ export default class TripPointEdit extends Component {
     this._state.isFavorite = !this._state.isFavorite;
   }
 
-  _onChangeOffer(evt) { // 2. Если по клику текущий элемент равен ключу в созданном объекте _offersObj -> меняем его value
-    this._state.isSelectedOffer[evt.target.value] = !this._state.isSelectedOffer[evt.target.value];
+  _onChangeOffer(evt) {
+    evt.target.checked === true ? this._state.checkingOffersArray.push(evt.target.value) : this._state.checkingOffersArray.splice(evt.target.value, 1);
   }
 
   _onChangeCursor(evt) {
@@ -65,21 +65,12 @@ export default class TripPointEdit extends Component {
     this._element.innerHTML = this.template;
   }
 
-  // get _getStateFromOffers() { // 1. создаем объект по массиву offers, изначально value каждого поля false
-  //   const offers = {};
-  //   for (const pair of this._offers.entries()) {
-  //     const key = pair[1];
-  //     offers[key] = false;
-  //   }
-  //   return offers;
+  // _getStateFromOffers() {
+  //   return this._offers.reduce(function (obj, key) {
+  //     obj[key] = false;
+  //     return obj;
+  //   }, {});
   // }
-
-  _getStateFromOffers() {
-    return this._offers.reduce(function (obj, key) {
-      obj[key] = false;
-      return obj;
-    }, {});
-  }
 
   set onReset(fn) {
     this._onReset = fn;
@@ -167,10 +158,10 @@ export default class TripPointEdit extends Component {
         <h3 class="point__details-title">offers</h3>
 
         <div class="point__offers-wrap">
-        ${Object.entries(this._state.isSelectedOffer).map((offer) => `
-          <input class="point__offers-input visually-hidden" type="checkbox" id="${offer[0]}" name="offer" value="${offer[0]}" ${offer[1] ? `checked` : ``}>
-          <label for="${offer[0]}" class="point__offers-label">
-            <span class="point__offer-service">${offer[0]}</span> + €<span class="point__offer-price">${this._price}</span>
+        ${Object.values(this._offers).map((offer) => `
+          <input class="point__offers-input visually-hidden" type="checkbox" id="${offer}" name="offer" value="${offer}">
+          <label for="${offer}" class="point__offers-label">
+            <span class="point__offer-service">${offer}</span> + €<span class="point__offer-price">${this._price}</span>
           </label>`.trim()).join(``)}
         </div>
 
@@ -225,8 +216,8 @@ export default class TripPointEdit extends Component {
       'price': (value) => {
         target.price = value;
       },
-      'offers': (value) => {
-        target.offers[value] = true;
+      'offers': () => {
+        target.offers = this._state.checkingOffersArray;
       },
     };
   }
