@@ -4,10 +4,10 @@ import Component from './component.js';
 export default class TripPoint extends Component {
   constructor(data) {
     super();
-
+    this._type = data.type;
     this._id = data.id;
     this._title = data.title;
-    this._icons = data.icons;
+    this._icon = data.icon;
     this._offers = data.offers;
     this._description = data.description;
     this._picture = data.picture;
@@ -27,7 +27,7 @@ export default class TripPoint extends Component {
   get template() {
     return `
 <article class="trip-point">
-  <i class="trip-icon">${this._icons.icon}</i>
+  <i class="trip-icon">${this._icon}</i>
   <h3 class="trip-point__title">${this._title} ${this._id}</h3>
   <p class="trip-point__schedule">
     <span class="trip-point__timetable">${this._timeStart} — ${this._timeEnd}</span>

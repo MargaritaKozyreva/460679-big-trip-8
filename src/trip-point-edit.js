@@ -5,10 +5,10 @@ import "flatpickr/dist/flatpickr.min.css";
 export default class TripPointEdit extends Component {
   constructor(data) {
     super();
-
+    this._type = data.type;
     this._id = data.id;
     this._title = data.title;
-    this._icons = data.icons;
+    this._icon = data.icon;
     this._offers = data.offers;
     this._description = data.description;
     this._picture = data.picture;
@@ -36,7 +36,7 @@ export default class TripPointEdit extends Component {
       timeStart: ``,
       timeEnd: ``,
       price: ``,
-      offers: Object.entries(this._state.isSelectedOffer), // 3. Присваиваем в поле offers наш созданный объект
+      offers: this._state.isSelectedOffer, // 3. Присваиваем в поле offers наш созданный объект
     };
 
     const pointEditMapper = TripPointEdit.createMapper(newFields);
@@ -46,7 +46,6 @@ export default class TripPointEdit extends Component {
         pointEditMapper[key](value);
       }
     }
-    newFields.offers = [...newFields.offers];
     return newFields;
   }
   _onChangeFavorite() {
@@ -101,19 +100,34 @@ export default class TripPointEdit extends Component {
       </label>
 
       <div class="travel-way">
-        <label class="travel-way__label" for="travel-way__toggle">${this._icons.icon}</label>
+        <label class="travel-way__label" for="travel-way__toggle">${this._icon}</label>
 
         <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
 
         <div class="travel-way__select">
           <div class="travel-way__select-group">
-          ${(Array.from(this._icons).map((icon) => `
-            <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${icon.title.toLowerCase()}" name="travel-way" value="${icon.title.toLowerCase()}">
-            <label class="travel-way__select-label" for="travel-way-${icon.title.toLowerCase()}">${icon.icon} ${icon.title.toLowerCase()}</label>
-            `.trim()))}
-          </div>
+          <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-taxi" name="travel-way" value="taxi" ${this._type === `Taxi` ? `checked` : ``}>
+          <label class="travel-way__select-label" for="travel-way-taxi">🚕 taxi</label>
+
+          <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-bus" name="travel-way" value="bus" ${this._type === `Bus` ? `checked` : ``}>
+          <label class="travel-way__select-label" for="travel-way-bus">🚌 bus</label>
+
+          <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-train" name="travel-way" value="train" ${this._type === `Train` ? `checked` : ``}>
+          <label class="travel-way__select-label" for="travel-way-train">🚂 train</label>
+
+          <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-flight" name="travel-way" value="train" checked ${this._type === `Train` ? `checked` : ``}>
+          <label class="travel-way__select-label" for="travel-way-flight">✈️ flight</label>
+        </div>
+
+        <div class="travel-way__select-group">
+          <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-check-in" name="travel-way" value="check-in" ${this._type === `Check-in` ? `checked` : ``}>
+          <label class="travel-way__select-label" for="travel-way-check-in">🏨 check-in</label>
+
+          <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-sightseeing" name="travel-way" value="sight-seeing" ${this._type === `Sightseeing` ? `checked` : ``}>
+          <label class="travel-way__select-label" for="travel-way-sightseeing">🏛 sightseeing</label>
         </div>
       </div>
+    </div>
 
       <div class="point__destination-wrap">
         <label class="point__destination-label" for="destination">${this._title}</label>
@@ -196,7 +210,7 @@ export default class TripPointEdit extends Component {
     this._timeStart = data.timeStart;
     this._timeEnd = data.timeEnd;
     this._price = data.price;
-    this._offers = this.offers;
+    this._offers = data.offers;
   }
 
   static createMapper(target) {
