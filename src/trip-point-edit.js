@@ -186,7 +186,7 @@ export default class TripPointEdit extends Component {
     this.element.querySelector(`.point__favorite-input`).addEventListener(`click`, this._onChangeFavorite);
     Array.from(this.element.querySelectorAll(`.point__offers-input`)).forEach((it) => it.addEventListener(`click`, this._onChangeOffer));
     this.element.querySelector(`.point__time`).addEventListener(`mouseover`, this._onChangeCursor);
-    flatpickr(this.element.querySelector(`.point__time .point__input`), {enableTime: true, noCalendar: true, altInput: true, altFormat: `h:i K`, dateFormat: `h:i K`});
+    flatpickr(this.element.querySelector(`.point__time .point__input`), {mode: `range`, noCalendar: false, enableTime: true, altInput: true, altFormat: `h:i`, dateFormat: `H:i`, time_24hr: true});
     // flatpickr(".card__date", { altInput: true, altFormat: "j F", dateFormat: "j F" });
   }
 
@@ -210,8 +210,8 @@ export default class TripPointEdit extends Component {
         target.id = value;
       },
       'time': (value) => {
-        target.timeStart = value.split(`—`)[0].trim();
-        target.timeEnd = value.split(`—`)[1].trim();
+        target.timeStart = value.split(`to`)[0].toString().trim();
+        target.timeEnd = value.split(`to`)[1].toString().trim();
       },
       'price': (value) => {
         target.price = value;
