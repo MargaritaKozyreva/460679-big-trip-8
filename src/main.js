@@ -35,7 +35,7 @@ const tripFilter = document.querySelector(`.trip-filter`);
 cities.forEach((item) => {
   const tripComponent = new TripPoint(item);
   const tripComponentEdit = new TripPointEdit(item);
-
+  console.log(tripComponent)
   tripItems.appendChild(tripComponent.render());
 
   tripComponent.onClick = () => {
@@ -55,7 +55,6 @@ cities.forEach((item) => {
     tripComponent.render();
     tripItems.replaceChild(tripComponent.element, tripComponentEdit.element);
     tripComponentEdit.unrender();
-    console.log(tripComponent)
   };
 
   tripComponentEdit.onReset = () => {

@@ -1,4 +1,6 @@
-import {getDuration} from './constants.js';
+import {
+  getDuration
+} from './constants.js';
 import Component from './component.js';
 
 export default class TripPoint extends Component {
@@ -8,7 +10,13 @@ export default class TripPoint extends Component {
     this._id = data.id;
     this._title = data.title;
     this._icon = data.icon;
-    this._offers = data.offers;
+    this._offers = [...data.offers].map((item) => {
+      return {
+        name: item,
+        isSelected: false,
+        price: 20
+      };
+    });
     this._description = data.description;
     this._picture = data.picture;
     this._timeStart = data.timeStart;
@@ -35,7 +43,7 @@ export default class TripPoint extends Component {
   </p>
   <p class="trip-point__price">${this._price} ${this._currencyRate}</p>
   <ul class="trip-point__offers">
-
+  ${this._offers.map((offer) => offer.isSelected === true ?  `<li><button class="trip-point__offer">${offer.name}</button></li>` : ``).join(``)}
   </ul>
 </article>`.trim();
   }

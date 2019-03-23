@@ -26,17 +26,18 @@ export const getRandomPicture = () => {
   return `http://picsum.photos/300/150?r=${Math.random()}`;
 };
 export const OFFERS_COUNT = 2;
+
 export const OFFERS = {
-  [TYPES.TAXI]: getRandomParam(OFFERS_STRING, OFFERS_COUNT),
-  [TYPES.BUS]: getRandomParam(OFFERS_STRING, OFFERS_COUNT),
-  [TYPES.TRAIN]: getRandomParam(OFFERS_STRING, OFFERS_COUNT),
-  [TYPES.SHIP]: getRandomParam(OFFERS_STRING, OFFERS_COUNT),
-  [TYPES.TRANSPORT]: getRandomParam(OFFERS_STRING, OFFERS_COUNT),
-  [TYPES.DRIVE]: getRandomParam(OFFERS_STRING, OFFERS_COUNT),
-  [TYPES.FLIGHT]: getRandomParam(OFFERS_STRING, OFFERS_COUNT),
-  [TYPES.CHECK]: getRandomParam(OFFERS_STRING, OFFERS_COUNT),
-  [TYPES.SIGHTSEEING]: getRandomParam(OFFERS_STRING, OFFERS_COUNT),
-  [TYPES.RESTAURANT]: getRandomParam(OFFERS_STRING, OFFERS_COUNT),
+  [TYPES.TAXI]: new Set(getRandomParam(OFFERS_STRING, OFFERS_COUNT)),
+  [TYPES.BUS]: new Set(getRandomParam(OFFERS_STRING, OFFERS_COUNT)),
+  [TYPES.TRAIN]: new Set(getRandomParam(OFFERS_STRING, OFFERS_COUNT)),
+  [TYPES.SHIP]: new Set(getRandomParam(OFFERS_STRING, OFFERS_COUNT)),
+  [TYPES.TRANSPORT]: new Set(getRandomParam(OFFERS_STRING, OFFERS_COUNT)),
+  [TYPES.DRIVE]: new Set(getRandomParam(OFFERS_STRING, OFFERS_COUNT)),
+  [TYPES.FLIGHT]: new Set(getRandomParam(OFFERS_STRING, OFFERS_COUNT)),
+  [TYPES.CHECK]: new Set(getRandomParam(OFFERS_STRING, OFFERS_COUNT)),
+  [TYPES.SIGHTSEEING]: new Set(getRandomParam(OFFERS_STRING, OFFERS_COUNT)),
+  [TYPES.RESTAURANT]: new Set(getRandomParam(OFFERS_STRING, OFFERS_COUNT)),
 };
 
 export const PRICE_COUNT = 1;

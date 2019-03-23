@@ -9,7 +9,11 @@ export default class TripPointEdit extends Component {
     this._id = data.id;
     this._title = data.title;
     this._icon = data.icon;
-    this._offers = data.offers;
+    this._offers = [...data.offers].map((item) => {
+      return {
+        name: item, isSelected: false, price: 20
+      };
+    });
     this._description = data.description;
     this._picture = data.picture;
     this._timeStart = data.timeStart;
@@ -22,12 +26,10 @@ export default class TripPointEdit extends Component {
     this._dateFlatpickr = null;
 
     this._state.isFavorite = false;
-    this._state.checkingOffersArray = [];
 
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onResetButtonClick = this._onResetButtonClick.bind(this);
     this._onChangeFavorite = this._onChangeFavorite.bind(this);
-    this._onChangeOffer = this._onChangeOffer.bind(this);
   }
   _processForm(formData) {
     const newFields = {
@@ -36,7 +38,13 @@ export default class TripPointEdit extends Component {
       timeStart: ``,
       timeEnd: ``,
       price: ``,
-      offers: new Array(),
+      offers: this._offers.map((item) => {
+        return {
+          name: item.name,
+          isSelected: false,
+          price: item.price
+        };
+      })
     };
 
     const pointEditMapper = TripPointEdit.createMapper(newFields);
@@ -48,12 +56,35 @@ export default class TripPointEdit extends Component {
     }
     return newFields;
   }
-  _onChangeFavorite() {
-    this._state.isFavorite = !this._state.isFavorite;
+
+  static createMapper(target) {
+    return {
+      'destination': (value) => {
+        target.id = value;
+      },
+      'time': (value) => {
+        target.timeStart = value.split(`to`)[0].toString().trim();
+        target.timeEnd = value.split(`to`)[1].toString().trim();
+      },
+      'price': (value) => {
+        target.price = value;
+      },
+      'offer': (value) => {
+        target.offers.find((item) => item.name === value).isSelected = true;
+      },
+    };
   }
 
-  _onChangeOffer(evt) {
-    evt.target.checked === true ? this._state.checkingOffersArray.push(evt.target.value) : this._state.checkingOffersArray.splice(evt.target.value, 1);
+  _onSubmitButtonClick(evt) {
+    evt.preventDefault();
+    const formData = new FormData(this._element.querySelector(`.point form`));
+    const newData = this._processForm(formData);
+    this.update(newData);
+    return typeof this._onSubmit === `function` && this._onSubmit(newData);
+  }
+
+  _onChangeFavorite() {
+    this._state.isFavorite = !this._state.isFavorite;
   }
 
   _onChangeCursor(evt) {
@@ -106,7 +137,7 @@ export default class TripPointEdit extends Component {
           <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-train" name="travel-way" value="train" ${this._type === `Train` ? `checked` : ``}>
           <label class="travel-way__select-label" for="travel-way-train">🚂 train</label>
 
-          <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-flight" name="travel-way" value="train" checked ${this._type === `Train` ? `checked` : ``}>
+          <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-flight" name="travel-way" value="flight"  ${this._type === `Flight` ? `checked` : ``}>
           <label class="travel-way__select-label" for="travel-way-flight">✈️ flight</label>
         </div>
 
@@ -158,10 +189,10 @@ export default class TripPointEdit extends Component {
         <h3 class="point__details-title">offers</h3>
 
         <div class="point__offers-wrap">
-        ${Object.values(this._offers).map((offer) => `
-          <input class="point__offers-input visually-hidden" type="checkbox" id="${offer}" name="offer" value="${offer}">
-          <label for="${offer}" class="point__offers-label">
-            <span class="point__offer-service">${offer}</span> + €<span class="point__offer-price">${this._price}</span>
+        ${this._offers.map((offer) => `
+          <input class="point__offers-input visually-hidden" type="checkbox" id="${offer.name}" name="offer" value="${offer.name}"${offer.isSelected === true ? `checked` : ``}>
+          <label for="${offer.name}" class="point__offers-label">
+            <span class="point__offer-service">${offer.name}</span> + €<span class="point__offer-price">${offer.price}</span>
           </label>`.trim()).join(``)}
         </div>
 
@@ -184,7 +215,6 @@ export default class TripPointEdit extends Component {
     this.element.querySelector(`.point__buttons [type=submit]`).addEventListener(`click`, this._onSubmitButtonClick);
     this.element.querySelector(`.point__buttons [type=reset]`).addEventListener(`click`, this._onResetButtonClick);
     this.element.querySelector(`.point__favorite-input`).addEventListener(`click`, this._onChangeFavorite);
-    Array.from(this.element.querySelectorAll(`.point__offers-input`)).forEach((it) => it.addEventListener(`click`, this._onChangeOffer));
     this.element.querySelector(`.point__time`).addEventListener(`mouseover`, this._onChangeCursor);
     flatpickr(this.element.querySelector(`.point__time .point__input`), {mode: `range`, noCalendar: false, enableTime: true, altInput: true, altFormat: `h:i`, dateFormat: `H:i`, time_24hr: true});
     // flatpickr(".card__date", { altInput: true, altFormat: "j F", dateFormat: "j F" });
@@ -193,7 +223,6 @@ export default class TripPointEdit extends Component {
   unbind() {
     this.element.querySelector(`.point__buttons [type=submit]`).removeEventListener(`click`, this._onSubmitButtonClick);
     this.element.querySelector(`.point__buttons [type=reset]`).removeEventListener(`click`, this._onResetButtonClick);
-    Array.from(this.element.querySelectorAll(`.point__offers-input`)).forEach((it) => it.removeEventListener(`click`, this._onChangeOffer));
   }
 
   update(data) {
@@ -202,32 +231,6 @@ export default class TripPointEdit extends Component {
     this._timeEnd = data.timeEnd;
     this._price = data.price;
     this._offers = data.offers;
-  }
-
-  static createMapper(target) {
-    return {
-      'destination': (value) => {
-        target.id = value;
-      },
-      'time': (value) => {
-        target.timeStart = value.split(`to`)[0].toString().trim();
-        target.timeEnd = value.split(`to`)[1].toString().trim();
-      },
-      'price': (value) => {
-        target.price = value;
-      },
-      'offers': () => {
-        target.offers = this._state.checkingOffersArray;
-      },
-    };
-  }
-
-  _onSubmitButtonClick(evt) {
-    evt.preventDefault();
-    const formData = new FormData(this._element.querySelector(`.point form`));
-    const newData = this._processForm(formData);
-    this.update(newData);
-    return typeof this._onSubmit === `function` && this._onSubmit(newData);
   }
 
   _onResetButtonClick(evt) {

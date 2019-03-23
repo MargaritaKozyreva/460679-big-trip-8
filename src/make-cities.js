@@ -53,5 +53,3 @@ export const cities = [{
   currencyRate: constant.CURRENCY_RATE,
 },
 ];
-
-console.log(cities)
