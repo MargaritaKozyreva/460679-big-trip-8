@@ -11,7 +11,9 @@ export default class TripPointEdit extends Component {
     this._icon = data.icon;
     this._offers = [...data.offers].map((item) => {
       return {
-        name: item, isSelected: false, price: 20
+        name: item,
+        isSelected: true,
+        price: 20
       };
     });
     this._description = data.description;
@@ -95,13 +97,6 @@ export default class TripPointEdit extends Component {
   _partialUpdate() {
     this._element.innerHTML = this.template;
   }
-
-  // _getStateFromOffers() {
-  //   return this._offers.reduce(function (obj, key) {
-  //     obj[key] = false;
-  //     return obj;
-  //   }, {});
-  // }
 
   set onReset(fn) {
     this._onReset = fn;
@@ -216,8 +211,15 @@ export default class TripPointEdit extends Component {
     this.element.querySelector(`.point__buttons [type=reset]`).addEventListener(`click`, this._onResetButtonClick);
     this.element.querySelector(`.point__favorite-input`).addEventListener(`click`, this._onChangeFavorite);
     this.element.querySelector(`.point__time`).addEventListener(`mouseover`, this._onChangeCursor);
-    flatpickr(this.element.querySelector(`.point__time .point__input`), {mode: `range`, noCalendar: false, enableTime: true, altInput: true, altFormat: `h:i`, dateFormat: `H:i`, time_24hr: true});
-    // flatpickr(".card__date", { altInput: true, altFormat: "j F", dateFormat: "j F" });
+    flatpickr(this.element.querySelector(`.point__time .point__input`), {
+      mode: `range`,
+      noCalendar: false,
+      enableTime: true,
+      altInput: true,
+      altFormat: `h:i`,
+      dateFormat: `H:i`,
+      time_24hr: true
+    });
   }
 
   unbind() {

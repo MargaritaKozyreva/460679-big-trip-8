@@ -13,7 +13,7 @@ export default class TripPoint extends Component {
     this._offers = [...data.offers].map((item) => {
       return {
         name: item,
-        isSelected: false,
+        isSelected: true,
         price: 20
       };
     });
@@ -43,7 +43,7 @@ export default class TripPoint extends Component {
   </p>
   <p class="trip-point__price">${this._price} ${this._currencyRate}</p>
   <ul class="trip-point__offers">
-  ${this._offers.map((offer) => offer.isSelected === true ?  `<li><button class="trip-point__offer">${offer.name}</button></li>` : ``).join(``)}
+  ${this._offers.map((offer) => offer.isSelected === true ? `<li><button class="trip-point__offer">${offer.name}</button></li>` : ``).join(``)}
   </ul>
 </article>`.trim();
   }
