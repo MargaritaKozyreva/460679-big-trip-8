@@ -12,7 +12,7 @@ export const getRandomPicture = () => {
   return `http://picsum.photos/300/150?r=${Math.random()}`;
 };
 
-export const TYPES = {
+export const Type = {
   TAXI: `Taxi`,
   BUS: `Bus`,
   TRAIN: `Train`,
@@ -25,17 +25,17 @@ export const TYPES = {
   RESTAURANT: `Restaurant`,
 };
 
-export const ICONS = {
-  [TYPES.TAXI]: `🚕`,
-  [TYPES.BUS]: `🚌`,
-  [TYPES.TRAIN]: `🚂`,
-  [TYPES.SHIP]: `🛳️`,
-  [TYPES.TRANSPORT]: `🚊`,
-  [TYPES.DRIVE]: `🚗`,
-  [TYPES.FLIGHT]: `✈️`,
-  [TYPES.CHECK]: `🏨`,
-  [TYPES.SIGHTSEEING]: `🏛️`,
-  [TYPES.RESTAURANT]: `🍴`,
+export const Icon = {
+  [Type.TAXI]: `🚕`,
+  [Type.BUS]: `🚌`,
+  [Type.TRAIN]: `🚂`,
+  [Type.SHIP]: `🛳️`,
+  [Type.TRANSPORT]: `🚊`,
+  [Type.DRIVE]: `🚗`,
+  [Type.FLIGHT]: `✈️`,
+  [Type.CHECK]: `🏨`,
+  [Type.SIGHTSEEING]: `🏛️`,
+  [Type.RESTAURANT]: `🍴`,
 };
 
 export const OFFERS_COUNT = 2;
@@ -44,14 +44,14 @@ const OFFERS_SET = `Add luggage, Switch to comfort class, Add meal, Choose seats
 const PRICE_SET = `20, 30, 40, 50, 100, 150`;
 
 const getOffers = () => {
-  return Object.values(TYPES).reduce((obj, value) => {
+  return Object.values(Type).reduce((obj, value) => {
     obj[value] = new Set(getRandomParam(OFFERS_SET, OFFERS_COUNT));
     return obj;
   }, {});
 };
 
 const getPrice = () => {
-  return Object.values(TYPES).reduce((obj, value) => {
+  return Object.values(Type).reduce((obj, value) => {
     obj[value] = getRandomParam(PRICE_SET, PRICE_COUNT);
     return obj;
   }, {});
